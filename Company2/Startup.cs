@@ -4,12 +4,21 @@ namespace Company2
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
 
-        public IConfiguration Configuration { get; }
+        public IConfigurationRoot Configuration
+        {
+            get;
+            set;
+        }
+        public static string ConnectionString
+        {
+            get;
+            private set;
+        }
+        public Startup(Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        {
+            Configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appSettings.json").Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,7 +42,7 @@ namespace Company2
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var connectionString = Configuration.GetConnectionString("MyConnection");
+            //var connectionString = Configuration.GetConnectionString("MyConnection");
             //Enable CORS
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
@@ -41,6 +50,7 @@ namespace Company2
             {
                 app.UseDeveloperExceptionPage();
             }
+            ConnectionString = Configuration["ConnectionStrings:DefaultConnection"];
 
             app.UseRouting();
 
@@ -49,13 +59,6 @@ namespace Company2
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
-                   Path.Combine(Directory.GetCurrentDirectory(), "Photos")),
-                RequestPath = "/Photos"
             });
         }
     }
