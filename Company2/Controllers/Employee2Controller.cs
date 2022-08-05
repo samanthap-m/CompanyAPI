@@ -7,37 +7,17 @@ using Company2.Models;
 namespace Company2.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Route("[controller]")]
-
-    public class EmployeeController : ControllerBase
+    public class Employee2Controller : ControllerBase
     {
-        [HttpGet]
-        public JsonResult Get()
+        [HttpGet("{employeeId}")]
+        public JsonResult Get(int employeeId)
         {
             using (var context = new CompanyContext())
             {
-                var employee = context.Employees.Join(context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
-                {
-                    p.EmployeeId,
-                    p.EmployeeName,
-                    p.DateOfJoining,
-                    e.DepartmentName,
-                    p.PhotoFileName,
-                })
-                    .Select(r => new
-                    {
-                        EmployeeId = r.EmployeeId,
-                        EmployeeName = r.EmployeeName,
-                        DateOfJoining = r.DateOfJoining,
-                        DepartmentName = r.DepartmentName,
-                        PhotoFileName = r.PhotoFileName
-                    }).ToList();
-                //Return all Employees
-                return new JsonResult(employee);
-                /*
-                //Return Employee with id=100
-                return context.Employees.Where(emp => emp.EmployeeId == 100).ToList();*/
+                //Return Employee with employeeid specified
+                return new JsonResult(context.Employees.Where(emp => emp.EmployeeId == employeeId).ToList());
 
             }
         }
