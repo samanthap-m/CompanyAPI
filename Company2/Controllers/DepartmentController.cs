@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using System.Data.SqlClient;
-using System.Configuration;
-using Newtonsoft.Json;
 using Company2.Models;
 
 namespace Company2.Controllers

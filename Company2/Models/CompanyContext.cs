@@ -17,7 +17,7 @@ namespace Company2.Models
         }
 
         public virtual DbSet<Department> Departments { get; set; } = null!;
-        public virtual DbSet<Employee> Employees { get; set; } = null!;
+        public virtual DbSet<Employee> Employees { get; set; } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,18 +34,22 @@ namespace Company2.Models
             {
                 entity.ToTable("Department");
 
+                entity.Property(e => e.DepartmentId).ValueGeneratedOnAdd();
+
                 entity.Property(e => e.DepartmentName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Employee>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
 
                 entity.ToTable("Employee");
 
                 entity.Property(e => e.DateOfJoining).HasColumnType("datetime");
 
                 entity.Property(e => e.EmployeeId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.DepartmentId).HasConversion<int>();
 
                 entity.Property(e => e.EmployeeName).HasMaxLength(50);
 

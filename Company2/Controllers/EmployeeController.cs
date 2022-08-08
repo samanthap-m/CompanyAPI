@@ -9,7 +9,6 @@ namespace Company2.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("[controller]")]
-
     public class EmployeeController : ControllerBase
     {
         [HttpGet]
@@ -25,19 +24,19 @@ namespace Company2.Controllers
                     e.DepartmentName,
                     p.PhotoFileName,
                 })
-                    .Select(r => new
-                    {
-                        EmployeeId = r.EmployeeId,
-                        EmployeeName = r.EmployeeName,
-                        DateOfJoining = r.DateOfJoining,
-                        DepartmentName = r.DepartmentName,
-                        PhotoFileName = r.PhotoFileName
-                    }).ToList();
+                   .Select(r => new
+                   {
+                       EmployeeId = r.EmployeeId,
+                       EmployeeName = r.EmployeeName,
+                       DateOfJoining = r.DateOfJoining,
+                       DepartmentName = r.DepartmentName,
+                       PhotoFileName = r.PhotoFileName
+                   }).ToList();
                 //Return all Employees
                 return new JsonResult(employee);
-                /*
-                //Return Employee with id=100
-                return context.Employees.Where(emp => emp.EmployeeId == 100).ToList();*/
+
+                //Return Employee with employeeid specified
+                //return new JsonResult(context.Employees.Where(emp => emp.EmployeeId == employeeId).ToList());
 
             }
         }
