@@ -9,89 +9,86 @@ namespace Company2.Controllers
     [Route("[controller]")]
     public class Employee2Controller : ControllerBase
     {
-        public List<dynamic> Getemployees(CompanyContext _context)
+        CompanyContext _context = new CompanyContext();
+        List<Employee> employees = new List<Employee>();
+
+        public List<Employee> Getemployees(CompanyContext _context)
         {
-            var employees = (from emp in _context.Employees
-                             join jd in _context.Departments on emp.DepartmentId equals jd.DepartmentId
-                             select new
-                             {
-                                 emp.EmployeeId,
-                                 emp.EmployeeName,
-                                 emp.DateOfJoining,
-                                 jd.DepartmentName,
-                                 emp.PhotoFileName
-                             }).ToList();
-            return employees.ToList<dynamic>();
+            employees = (from emp in _context.Employees select emp).ToList();
+            return employees;
         }
 
         [HttpGet]
         public JsonResult Get()
         {
-            using (var context = new CompanyContext())
+            try
             {
-               var emps = this.Getemployees(context);
-            // var employees = context.Employees.Join(ToList();
+                employees = this.Getemployees(_context);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }    
             //Return all Employees
-            return new JsonResult(emps);
-             }
-         }
+            return new JsonResult(employees);
+        }
 
          [HttpPost]
          public JsonResult Post(Employee emp2)
          {
-             //Add Employee
-             using (var context = new CompanyContext())
-             {
+            try
+            {
+                //Add Employee
+                _context.Employees.Add(emp2);
 
-                 context.Employees.Add(emp2);
-
-                 context.SaveChanges();
-
-                var employees = this.Getemployees(context);
-
-                //Return all Employees
-                return new JsonResult(employees);
-             }
-         }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            //Return all Employees
+            return (this.Get());
+        }
 
          [HttpPut]
          public JsonResult Put(Employee emp)
          {
-             //Update Employee
-             using (var context = new CompanyContext())
-             {
-                 Employee emp1 = context.Employees.Where(emp1 => emp1.EmployeeId == emp.EmployeeId).FirstOrDefault();
-                 emp1.EmployeeName = emp.EmployeeName;
-                 emp1.PhotoFileName = emp.PhotoFileName;
-                 emp1.DateOfJoining = emp.DateOfJoining;
-                 emp1.DepartmentId = emp.DepartmentId;
+            try
+            {
+                //Update Employee
+                _context.Employees.Update(emp);
 
-                 context.SaveChanges();
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
-                var employees = this.Getemployees(context);
-                //Return all Employees
-                return new JsonResult(employees);
-             }
-         }
+            //Return all Employees
+            return (this.Get());
+        }
 
          [HttpDelete("{employeeId}")]
          public JsonResult Delete(int employeeId)
          {
-             using (var context = new CompanyContext())
-             {
-                 //Remove employee
-                 Employee emp2 = context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
+            try
+            {
+                // Remove employee
+                Employee emp2 = _context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
 
-                 context.Employees.Remove(emp2);
-                 context.SaveChanges();
+                _context.Employees.Remove(emp2);
 
-                var employees = this.Getemployees(context);
-                //Return all Employees
-                return new JsonResult(employees);
-             }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
+            //Return all Employees
+            return (this.Get());
          }
     }
 }
-
-
-
