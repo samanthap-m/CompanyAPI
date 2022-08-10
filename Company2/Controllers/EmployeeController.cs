@@ -79,7 +79,7 @@ namespace Company2.Controllers
             //Update Employee
             using (var context = new CompanyContext())
             {
-                Employee emp1 = context.Employees.Where(emp1 => emp1.EmployeeId == emp.EmployeeId).FirstOrDefault();
+                Employee? emp1 = context.Employees.Where(emp1 => emp1.EmployeeId == emp.EmployeeId).FirstOrDefault();
                 emp1.EmployeeName = emp.EmployeeName;
                 emp1.PhotoFileName = emp.PhotoFileName;
                 emp1.DateOfJoining = emp.DateOfJoining;
@@ -114,7 +114,7 @@ namespace Company2.Controllers
             using (var context = new CompanyContext())
             {
                 //Remove employee
-                Employee emp = context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
+                Employee? emp = context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
 
                 context.Employees.Remove(emp);
                 context.SaveChanges();

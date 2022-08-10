@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Company2.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Serialization;
 
 namespace Company2
@@ -11,12 +12,12 @@ namespace Company2
             get;
             set;
         }
-        public static string ConnectionString
+        public static string? ConnectionString
         {
             get;
             private set;
         }
-        public Startup(Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        public Startup(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appSettings.json").Build();
         }
@@ -24,6 +25,7 @@ namespace Company2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             //Enable CORS
             services.AddCors(c =>
             {
