@@ -15,8 +15,7 @@ namespace Company2.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        
-        public IActionResult GetFirstGadgetWithMapping()
+        public IActionResult Get()
         {
             var employees = _context.Employees.FirstOrDefault();
             var result = _mapper.Map<Employee, Employee2>(employees);

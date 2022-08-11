@@ -9,5 +9,7 @@ namespace Company2.Models
         public int? EmployeeId { get; set; }
         public string? EmployeeName { get; set; }        
         public virtual int? DepartmentId { get; set; }
+        
+        public virtual string DepartmentName { get; set; }
     }
 }

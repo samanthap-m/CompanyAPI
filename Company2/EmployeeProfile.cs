@@ -7,10 +7,8 @@ namespace Company2
     {
         public EmployeeProfile()
         {
-            CreateMap<Employee, Employee2>()
-                .ForMember(dest => dest.EmployeeId,
-                           opt => opt.MapFrom(src => src.EmployeeId));
-            CreateMap<Employee2, Employee>();
+            CreateMap<Employee, Employee2>();
+            CreateMap<Department, Department2>();
         }
     }
 }
