@@ -15,13 +15,13 @@ namespace Company2.Controllers
         {
             _mapper = mapper;
         }
-
+/*
         [HttpGet]
         public IActionResult Get()
         {
             var employees = _context.Employees.Include(_ => _.Department).ToList();
             List<Employee2> result = _mapper.Map<List<Employee>, List<Employee2>>(employees);
             return Ok(result);
-        }
+        }*/
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Company2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Company2.Controllers
 {
@@ -16,12 +18,12 @@ namespace Company2.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+/*        [HttpGet]
         public IActionResult Get()
         {
             var employees = _context.Employees.Include(_ => _.Department).ProjectTo<Employee2>(_mapper.ConfigurationProvider).ToList();
             return Ok(employees);
-        }
+        }*/
     }
 }
 

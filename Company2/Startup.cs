@@ -1,5 +1,6 @@
 ﻿using Company2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Newtonsoft.Json.Serialization;
 
 namespace Company2
