@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Company2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Company2.Controllers
 {
@@ -14,7 +15,8 @@ namespace Company2.Controllers
 
         public List<Employee> Getemployees(CompanyContext _context)
         {
-            employees = (from emp in _context.Employees select emp).ToList();
+            employees = _context.Employees.Include(m => m.Department).ToList();
+
             return employees;
         }
 
@@ -28,7 +30,7 @@ namespace Company2.Controllers
             catch (Exception ex)
             {
                 throw;
-            }    
+            }  
             //Return all Employees
             return new JsonResult(employees);
         }
@@ -76,7 +78,7 @@ namespace Company2.Controllers
             try
             {
                 // Remove employee
-                Employee emp2 = _context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
+                Employee? emp2 = _context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
 
                 _context.Employees.Remove(emp2);
 

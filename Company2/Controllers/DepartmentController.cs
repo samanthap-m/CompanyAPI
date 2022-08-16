@@ -40,7 +40,7 @@ namespace Company2.Controllers
             using (var context = new CompanyContext())
             {
                 //Update Maintainance department
-                Department dep1 = context.Departments.Where(dep1 => dep1.DepartmentId == dep.DepartmentId).FirstOrDefault();
+                Department? dep1 = context.Departments.Where(dep1 => dep1.DepartmentId == dep.DepartmentId).FirstOrDefault();
                 dep1.DepartmentName = dep.DepartmentName;
 
                 context.SaveChanges();
@@ -55,7 +55,7 @@ namespace Company2.Controllers
             using (var context = new CompanyContext())
             {
                 //Remove department
-                Department dep = context.Departments.Where(dep => dep.DepartmentId == departmentId).FirstOrDefault();
+                Department? dep = context.Departments.Where(dep => dep.DepartmentId == departmentId).FirstOrDefault();
 
                 context.Departments.Remove(dep);
                 context.SaveChanges();
