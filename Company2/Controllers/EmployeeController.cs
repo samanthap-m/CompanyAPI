@@ -4,6 +4,8 @@ using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Company2.Models;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace Company2.Controllers
 {
@@ -26,31 +28,28 @@ namespace Company2.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            using (var context = new CompanyContext())
+            var employee = _context.Employees.Join(_context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
             {
-                var employee = context.Employees.Join(context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
-                {
-                    p.EmployeeId,
-                    p.EmployeeName,
-                    p.DateOfJoining,
-                    e.DepartmentName,
-                    p.PhotoFileName,
-                })
-                   .Select(r => new
-                   {
-                       EmployeeId = r.EmployeeId,
-                       EmployeeName = r.EmployeeName,
-                       DateOfJoining = r.DateOfJoining,
-                       DepartmentName = r.DepartmentName,
-                       PhotoFileName = r.PhotoFileName
-                   }).ToList();
-                //Return all Employees
-                return new JsonResult(employee);
+                p.EmployeeId,
+                p.EmployeeName,
+                p.DateOfJoining,
+                e.DepartmentName,
+                p.PhotoFileName,
+            })
+            .Select(r => new
+            {
+                EmployeeId = r.EmployeeId,
+                EmployeeName = r.EmployeeName,
+                DateOfJoining = r.DateOfJoining,
+                DepartmentName = r.DepartmentName,
+                PhotoFileName = r.PhotoFileName
+            }).ToList();
+            //Return all Employees
+            return new JsonResult(employee);
 
-                //Return Employee with employeeid specified
-                //return new JsonResult(context.Employees.Where(emp => emp.EmployeeId == employeeId).ToList());
+            //Return Employee with employeeid specified
+            //return new JsonResult(context.Employees.Where(emp => emp.EmployeeId == employeeId).ToList());
 
-            }
         }
 
         [HttpGet]
@@ -69,36 +68,44 @@ namespace Company2.Controllers
             return new JsonResult(employees);
         }
 
+        [HttpGet]
+        [MapToApiVersion("3")]
+        public JsonResult Get3()
+        {
+            var c = new MapperConfiguration(cfg => cfg.CreateProjection<Employee, EmployeeModel>()
+                                                      .ForMember(dto => dto.DepartmentName, conf =>
+                                                  conf.MapFrom(ol => ol.Department.DepartmentName)));
+
+            return new JsonResult(_context.Employees.ProjectTo<EmployeeModel>(c).ToList());
+        }
+
         [HttpPost]
         public JsonResult Post(Employee emp)
         {
             //Add Employee
-            using (var context = new CompanyContext())
+            _context.Employees.Add(emp);
+
+            _context.SaveChanges();
+
+            var employee = _context.Employees.Join(_context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
             {
+                p.EmployeeId,
+                p.EmployeeName,
+                p.DateOfJoining,
+                e.DepartmentName,
+                p.PhotoFileName,
+            })
+               .Select(r => new
+               {
+                   EmployeeId = r.EmployeeId,
+                   EmployeeName = r.EmployeeName,
+                   DateOfJoining = r.DateOfJoining,
+                   DepartmentName = r.DepartmentName,
+                   PhotoFileName = r.PhotoFileName
+               }).ToList();
+            //Return all Employees
+            return new JsonResult(employee);
 
-                context.Employees.Add(emp);
-
-                context.SaveChanges();
-
-                var employee = context.Employees.Join(context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
-                {
-                    p.EmployeeId,
-                    p.EmployeeName,
-                    p.DateOfJoining,
-                    e.DepartmentName,
-                    p.PhotoFileName,
-                })
-                   .Select(r => new
-                   {
-                       EmployeeId = r.EmployeeId,
-                       EmployeeName = r.EmployeeName,
-                       DateOfJoining = r.DateOfJoining,
-                       DepartmentName = r.DepartmentName,
-                       PhotoFileName = r.PhotoFileName
-                   }).ToList();
-                //Return all Employees
-                return new JsonResult(employee);
-            }
         }
 
         [HttpPost]
@@ -120,39 +127,55 @@ namespace Company2.Controllers
             return (this.Get2());
         }
 
+        [HttpPost]
+        [MapToApiVersion("3")]
+        public JsonResult Post3(Employee emp2)
+        {
+            try
+            {
+                //Add Employee
+                _context.Employees.Add(emp2);
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            //Return all Employees
+            return (this.Get3());
+        }
+
         [HttpPut]
         public JsonResult Put(Employee emp)
         {
             //Update Employee
-            using (var context = new CompanyContext())
+            Employee? emp1 = _context.Employees.Where(emp1 => emp1.EmployeeId == emp.EmployeeId).FirstOrDefault();
+            emp1.EmployeeName = emp.EmployeeName;
+            emp1.PhotoFileName = emp.PhotoFileName;
+            emp1.DateOfJoining = emp.DateOfJoining;
+            emp1.DepartmentId = emp.DepartmentId;
+
+            _context.SaveChanges();
+
+            var employee = _context.Employees.Join(_context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
             {
-                Employee? emp1 = context.Employees.Where(emp1 => emp1.EmployeeId == emp.EmployeeId).FirstOrDefault();
-                emp1.EmployeeName = emp.EmployeeName;
-                emp1.PhotoFileName = emp.PhotoFileName;
-                emp1.DateOfJoining = emp.DateOfJoining;
-                emp1.DepartmentId = emp.DepartmentId;
-
-                context.SaveChanges();
-
-                var employee = context.Employees.Join(context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
-                {
-                    p.EmployeeId,
-                    p.EmployeeName,
-                    p.DateOfJoining,
-                    e.DepartmentName,
-                    p.PhotoFileName,
-                })
-                   .Select(r => new
-                   {
-                       EmployeeId = r.EmployeeId,
-                       EmployeeName = r.EmployeeName,
-                       DateOfJoining = r.DateOfJoining,
-                       DepartmentName = r.DepartmentName,
-                       PhotoFileName = r.PhotoFileName
-                   }).ToList();
-                //Return all Employees
-                return new JsonResult(employee);
-            }
+                p.EmployeeId,
+                p.EmployeeName,
+                p.DateOfJoining,
+                e.DepartmentName,
+                p.PhotoFileName,
+            })
+               .Select(r => new
+               {
+                   EmployeeId = r.EmployeeId,
+                   EmployeeName = r.EmployeeName,
+                   DateOfJoining = r.DateOfJoining,
+                   DepartmentName = r.DepartmentName,
+                   PhotoFileName = r.PhotoFileName
+               }).ToList();
+            //Return all Employees
+            return new JsonResult(employee);
         }
 
         [HttpPut]
@@ -175,36 +198,53 @@ namespace Company2.Controllers
             return (this.Get2());
         }
 
+        [HttpPut]
+        [MapToApiVersion("3")]
+        public JsonResult Put3(Employee emp)
+        {
+            try
+            {
+                //Update Employee
+                _context.Employees.Update(emp);
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            //Return all Employees
+            return (this.Get3());
+        }
+
         [HttpDelete("{employeeId}")]
         public JsonResult Delete(int employeeId)
         {
-            using (var context = new CompanyContext())
+            //Remove employee
+            Employee? emp = _context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
+
+            _context.Employees.Remove(emp);
+            _context.SaveChanges();
+
+            var employee = _context.Employees.Join(_context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
             {
-                //Remove employee
-                Employee? emp = context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
-
-                context.Employees.Remove(emp);
-                context.SaveChanges();
-
-                var employee = context.Employees.Join(context.Departments, p => p.DepartmentId, e => e.DepartmentId, (p, e) => new
-                {
-                    p.EmployeeId,
-                    p.EmployeeName,
-                    p.DateOfJoining,
-                    e.DepartmentName,
-                    p.PhotoFileName,
-                })
-                   .Select(r => new
-                   {
-                       EmployeeId = r.EmployeeId,
-                       EmployeeName = r.EmployeeName,
-                       DateOfJoining = r.DateOfJoining,
-                       DepartmentName = r.DepartmentName,
-                       PhotoFileName = r.PhotoFileName
-                   }).ToList();
-                //Return all Employees
-                return new JsonResult(employee);
-            }
+                p.EmployeeId,
+                p.EmployeeName,
+                p.DateOfJoining,
+                e.DepartmentName,
+                p.PhotoFileName,
+            })
+               .Select(r => new
+               {
+                   EmployeeId = r.EmployeeId,
+                   EmployeeName = r.EmployeeName,
+                   DateOfJoining = r.DateOfJoining,
+                   DepartmentName = r.DepartmentName,
+                   PhotoFileName = r.PhotoFileName
+               }).ToList();
+            //Return all Employees
+            return new JsonResult(employee);
         }
 
         [HttpDelete("{employeeId}")]
@@ -227,6 +267,28 @@ namespace Company2.Controllers
 
             //Return all Employees
             return (this.Get2());
+        }
+
+        [HttpDelete("{employeeId}")]
+        [MapToApiVersion("3")]
+        public JsonResult Delete3(int employeeId)
+        {
+            try
+            {
+                // Remove employee
+                Employee? emp2 = _context.Employees.Where(emp => emp.EmployeeId == employeeId).FirstOrDefault();
+
+                _context.Employees.Remove(emp2);
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            //Return all Employees
+            return (this.Get3());
         }
     }
 }
