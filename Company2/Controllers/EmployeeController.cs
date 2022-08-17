@@ -61,7 +61,7 @@ namespace Company2.Controllers
                         list.Add(obj2);
                     }
                     jsonstr = JsonConvert.SerializeObject(list);
-                    var o=JsonConvert.DeserializeObject<dynamic>(jsonstr);
+                    var o = JsonConvert.DeserializeObject<dynamic>(jsonstr);
                     foreach(var item in o)
                     {
                         item.Property("DepartmentId").Remove();
