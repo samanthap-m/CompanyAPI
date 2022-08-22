@@ -1,17 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Company2.Models
 {
-    public class Employee 
+    public class EmployeeModel
     {
         [Key]
         public int? EmployeeId { get; set; }
         public string? EmployeeName { get; set; }
         public DateTime? DateOfJoining { get; set; }
         public string? PhotoFileName { get; set; }
-        public virtual int? DepartmentId { get; set; }
+        public string? DepartmentName { get; set; }
 
-        public virtual Department Department { get; set; }
+        //public virtual int? DepartmentId { get; set; }
     }
 }

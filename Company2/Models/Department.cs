@@ -1,8 +1,11 @@
-﻿namespace Company2.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Company2.Models
 {
     public class Department
     {
-        public int DepartmentId { get; set; }
-        public string DepartmentName { get; set; }
+        [Key]
+        public int? DepartmentId { get; set; }
+        public string? DepartmentName { get; set; }
     }
 }
