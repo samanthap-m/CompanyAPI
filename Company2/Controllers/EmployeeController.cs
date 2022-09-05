@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using System.Data.SqlClient;
-using Newtonsoft.Json;
 using Company2.Models;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
 
@@ -19,7 +16,6 @@ namespace Company2.Controllers
 
         public List<Employee> Getemployees(CompanyContext _context)
         {
-            //employees = _context.Employees.Include(m => m.DepartmentId).ToList();
             employees = _context.Employees.ToList();
 
             return employees;

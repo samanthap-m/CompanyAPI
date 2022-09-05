@@ -23,8 +23,8 @@ namespace Company2.Controllers
         {
             using (var context = new CompanyContext())
             {
-                //Add Maintainance department
-                // dep.DepartmentName = "Maintainance";
+                Add Maintainance department
+                dep.DepartmentName = "Maintainance";
 
                 context.Departments.Add(dep);
 

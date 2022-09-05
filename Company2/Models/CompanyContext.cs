@@ -41,8 +41,6 @@ namespace Company2.Models
 
             modelBuilder.Entity<Employee>(entity =>
             {
-                //entity.HasNoKey();
-
                 entity.ToTable("Employee");
 
                 entity.Property(e => e.DateOfJoining).HasColumnType("datetime");
@@ -54,8 +52,6 @@ namespace Company2.Models
                 entity.Property(e => e.EmployeeName).HasMaxLength(50);
 
                 entity.Property(e => e.PhotoFileName).HasMaxLength(500);
-
-                //entity.HasOne("Department").WithMany("Departments").HasForeignKey("DepartmentId");
             });
 
 
