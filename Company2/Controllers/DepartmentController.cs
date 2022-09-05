@@ -5,7 +5,7 @@ using Company2.Models;
 namespace Company2.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DepartmentController : ControllerBase
     {
         [HttpGet]
