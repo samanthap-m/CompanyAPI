@@ -5,7 +5,8 @@ using Company2.Models;
 namespace Company2.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/" +
+        "[controller]")]
     public class DepartmentController : ControllerBase
     {
         [HttpGet]
@@ -23,7 +24,7 @@ namespace Company2.Controllers
         {
             using (var context = new CompanyContext())
             {
-                Add Maintainance department
+               // Add Maintainance department
                 dep.DepartmentName = "Maintainance";
 
                 context.Departments.Add(dep);
